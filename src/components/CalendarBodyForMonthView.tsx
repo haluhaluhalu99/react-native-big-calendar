@@ -1,7 +1,7 @@
 import calendarize from 'calendarize'
 import dayjs from 'dayjs'
 import * as React from 'react'
-import { Platform, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Platform, Text, TouchableOpacity, View, ViewStyle, TextStyle } from 'react-native'
 
 import { u } from '../commonStyles'
 import { useNow } from '../hooks/useNow'
@@ -30,6 +30,7 @@ interface CalendarBodyForMonthViewProps<T> {
   renderEvent?: EventRenderer<T>
   maxVisibleEventCount: number
   weekStartsOn: WeekNum
+  textOtherStyle?: TextStyle
 }
 
 function _CalendarBodyForMonthView<T>({
@@ -45,6 +46,7 @@ function _CalendarBodyForMonthView<T>({
   renderEvent,
   maxVisibleEventCount,
   weekStartsOn,
+  textOtherStyle
 }: CalendarBodyForMonthViewProps<T>) {
   const { now } = useNow(!hideNowIndicator)
   const [calendarWidth, setCalendarWidth] = React.useState<number>(0)
@@ -145,23 +147,23 @@ function _CalendarBodyForMonthView<T>({
                         index > maxVisibleEventCount ? null : index === maxVisibleEventCount ? (
                           <Text
                             key={index}
-                            style={{ fontSize: 11, marginTop: 2, fontWeight: 'bold' }}
+                            style={[{ fontSize: 11, marginTop: 2, fontWeight: 'bold' }, textOtherStyle]}
                           >
-                            {events.length - maxVisibleEventCount} More
+                            {events.length - maxVisibleEventCount} ...
                           </Text>
                         ) : (
-                          <CalendarEventForMonthView
-                            key={index}
-                            event={event}
-                            eventCellStyle={eventCellStyle}
-                            onPressEvent={onPressEvent}
-                            renderEvent={renderEvent}
-                            date={date}
-                            dayOfTheWeek={ii}
-                            calendarWidth={calendarWidth}
-                            isRTL={theme.isRTL}
-                          />
-                        ),
+                            <CalendarEventForMonthView
+                              key={index}
+                              event={event}
+                              eventCellStyle={eventCellStyle}
+                              onPressEvent={onPressEvent}
+                              renderEvent={renderEvent}
+                              date={date}
+                              dayOfTheWeek={ii}
+                              calendarWidth={calendarWidth}
+                              isRTL={theme.isRTL}
+                            />
+                          ),
                       ],
                       [] as (null | JSX.Element)[],
                     )}

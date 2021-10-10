@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { ViewStyle } from 'react-native'
+import { ViewStyle, NativeSyntheticEvent, NativeScrollEvent, TextStyle } from 'react-native'
 
 import { MIN_HEIGHT } from '../commonStyles'
 import {
@@ -64,7 +64,6 @@ export interface CalendarContainerProps<T> {
   mode?: Mode
   scrollOffsetMinutes?: number
   showTime?: boolean
-
   swipeEnabled?: boolean
   weekStartsOn?: WeekNum
   onChangeDate?: DateRangeHandler
@@ -73,9 +72,12 @@ export interface CalendarContainerProps<T> {
   onPressEvent?: (event: ICalendarEvent<T>) => void
   weekEndsOn?: WeekNum
   maxVisibleEventCount?: number
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  textOtherStyle?: TextStyle
 }
 
 function _CalendarContainer<T>({
+  onScroll,
   events,
   height,
   ampm = false,
@@ -100,6 +102,7 @@ function _CalendarContainer<T>({
   renderHeaderForMonthView: HeaderComponentForMonthView = CalendarHeaderForMonthView,
   weekEndsOn = 6,
   maxVisibleEventCount = 3,
+  textOtherStyle
 }: CalendarContainerProps<T>) {
   const [targetDate, setTargetDate] = React.useState(dayjs(date))
 
@@ -191,6 +194,7 @@ function _CalendarContainer<T>({
           renderEvent={renderEvent}
           targetDate={targetDate}
           maxVisibleEventCount={maxVisibleEventCount}
+          textOtherStyle={textOtherStyle}
         />
       </React.Fragment>
     )
@@ -208,6 +212,7 @@ function _CalendarContainer<T>({
       <HeaderComponent {...headerProps} />
       <CalendarBody
         {...commonProps}
+        onScroll={onScroll}
         style={bodyContainerStyle}
         containerHeight={height}
         events={daytimeEvents}

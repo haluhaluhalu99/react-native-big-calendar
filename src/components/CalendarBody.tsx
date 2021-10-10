@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import * as React from 'react'
-import { Platform, ScrollView, StyleSheet, View, ViewStyle } from 'react-native'
+import { Platform, ScrollView, StyleSheet, View, ViewStyle, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
 
 import { u } from '../commonStyles'
 import { useNow } from '../hooks/useNow'
@@ -44,6 +44,7 @@ interface CalendarBodyProps<T> {
   onPressEvent?: (event: ICalendarEvent<T>) => void
   onSwipeHorizontal?: (d: HorizontalDirection) => void
   renderEvent?: EventRenderer<T>
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }
 
 function _CalendarBody<T>({
@@ -62,6 +63,7 @@ function _CalendarBody<T>({
   hideNowIndicator,
   overlapOffset,
   renderEvent,
+  onScroll
 }: CalendarBodyProps<T>) {
   const scrollView = React.useRef<ScrollView>(null)
   const { now } = useNow(!hideNowIndicator)
@@ -114,6 +116,7 @@ function _CalendarBody<T>({
 
   return (
     <ScrollView
+      onScroll={onScroll}
       style={[
         {
           height: containerHeight - cellHeight * 3,
